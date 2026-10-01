@@ -341,29 +341,108 @@
             background: linear-gradient(135deg, #197278 0%, #124d54 100%);
             color: #ffffff;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 15px;
-            font-weight: 600;
             border: none;
-            border-radius: 30px;
-            padding: 14px 28px;
+            border-radius: 24px;
+            padding: 12px 20px;
             cursor: pointer;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            box-shadow: 0 6px 18px rgba(25, 114, 120, 0.3);
-            transition: all 0.25s ease;
+            gap: 12px;
+            box-shadow: 0 6px 20px rgba(25, 114, 120, 0.28);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             width: 100%;
+            user-select: none;
         }
 
         .party-popper-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 24px rgba(25, 114, 120, 0.4);
-            background: linear-gradient(135deg, #1c7f86 0%, #165b63 100%);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 26px rgba(25, 114, 120, 0.38);
+            background: linear-gradient(135deg, #1d8289 0%, #165b63 100%);
         }
 
         .party-popper-btn:active {
             transform: scale(0.98);
+        }
+
+        .btn-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .btn-main-text {
+            font-size: 15.5px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            color: #ffffff;
+        }
+
+        .btn-sub-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffe082;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 2px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-icon {
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .party-popper-btn:hover .btn-icon-left {
+            transform: rotate(-15deg) scale(1.2);
+        }
+
+        .party-popper-btn:hover .btn-icon-right {
+            transform: rotate(15deg) scale(1.2);
+        }
+
+        /* Tarjeta del secreto revelado */
+        .secret-box {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-top: 0;
+        }
+
+        .secret-box.revealed {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 16px;
+        }
+
+        .secret-card {
+            background: #fffcf2;
+            border: 1.5px dashed #d4af37;
+            border-radius: 16px;
+            padding: 18px 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.15);
+        }
+
+        .secret-tag {
+            display: inline-block;
+            font-family: 'Caveat', cursive;
+            font-size: 17px;
+            color: #b27b13;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .secret-message {
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+            line-height: 1.45;
+            color: #3e2723;
+            margin: 0;
         }
 
         /* Mensajito sutil debajo del botón */
@@ -472,7 +551,7 @@
 
                 <p>Desde que llegaste a mi vida, no dejo de admirar la pasión y el corazón que le pones a todo lo que amas. Me encanta verte brillar, ya sea demostrando tu fuerza en <span class="mark-water">el agua&nbsp;🏊‍♀️</span>, conquistando <span class="mark-gold">medallas&nbsp;🥇</span>, o creando magia con tus <span class="mark-choco">esculturas de chocolate&nbsp;🍫</span>. Eres inspiración pura.</p>
 
-                <p>Pero hoy, mi mayor orgullo es verte culminar esta etapa&nbsp;🎓. Sé cuántas horas de esfuerzo, cansancio y sacrificio hay detrás de este título universitario. Me siento inmensamente feliz y afortunado de poder acompañarte hoy y celebrar a la mujer tan increíble que eres.</p>
+                <p>Pero hoy, mi mayor orgullo es verte culminar esta etapa&nbsp;🎓. Sé cuántas horas de esfuerzo, cansancio y sacrificio hay detrás de este título universitario. Me siento inmensamente feliz y afortunado de poder acompañarte hoy a la lejania y celebrar a la mujer tan increíble que eres.</p>
 
                 <p>Este es solo el comienzo de cosas gigantes para ti. Sigue comiéndote el mundo, que yo siempre estaré aquí, en primera fila, cuidándote y aplaudiendo cada una de tus victorias.</p>
 
@@ -492,15 +571,49 @@
 
             <!-- Botón de Celebración Festivo -->
             <div class="celebration-trigger">
-                <button class="party-popper-btn" id="confettiBtn" onclick="launchConfetti()">
-                    <span>🎉</span> ¡Tirar confeti para Caro! <span>🎓</span>
+                <button class="party-popper-btn" id="confettiBtn" onclick="toggleSecret()">
+                    <span class="btn-icon btn-icon-left">🤫</span>
+                    <span class="btn-content">
+                        <span class="btn-main-text">¿Quieres saber un secreto?</span>
+                        <span class="btn-sub-text">¡Haz clic aquí! ✨</span>
+                    </span>
+                    <span class="btn-icon btn-icon-right">💌</span>
                 </button>
-                <span class="hint-text">Toca las fotos o el botón para celebrar ✨</span>
+
+                <!-- Caja del Secreto Revelado -->
+                <div class="secret-box" id="secretBox">
+                    <div class="secret-card">
+                        <span class="secret-tag">✦ Solo entre tú y yo 🤫 ✦</span>
+                        <p class="secret-message">
+                            "Aunque hoy esté viéndote a la distancia, no hay nadie en este planeta más orgulloso de ti que yo. ¡Eres mi persona favorita en el mundo y vas a llegar tan lejos como te lo propongas! ❤️‍🩹✨"
+                        </p>
+                    </div>
+                </div>
             </div>
         </article>
     </div>
 
     <script>
+        /* Mostrar u ocultar el secreto con confeti y celebración */
+        function toggleSecret() {
+            const box = document.getElementById('secretBox');
+            const isRevealed = box.classList.contains('revealed');
+
+            if (!isRevealed) {
+                box.classList.add('revealed');
+                launchConfetti();
+                // Destellos de corazones flotantes
+                const rect = box.getBoundingClientRect();
+                for (let i = 0; i < 4; i++) {
+                    setTimeout(() => {
+                        popMemory('💖', { clientX: window.innerWidth / 2, clientY: rect.top + 30 });
+                    }, i * 90);
+                }
+            } else {
+                box.classList.remove('revealed');
+            }
+        }
+
         /* Confeti con física de papel real y papelitos dorados */
         function launchConfetti() {
             if (typeof confetti === 'function') {
